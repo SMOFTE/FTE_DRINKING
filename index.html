@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ฟอร์มบันทึกข้อมูล</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <style>
+      body {
+        font-family: 'Tahoma', sans-serif; /* ตัวอย่างการเปลี่ยน font */
+      }
+      .form-container {
+        max-width: 500px;
+        margin: auto;
+        margin-top: 30px; /* ลด margin-top ลงเล็กน้อย */
+        margin-bottom: 30px; /* เพิ่ม margin-bottom */
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        border-radius: 8px; /* เพิ่มความโค้งมนเล็กน้อย */
+      }
+      .form-container h4 {
+        font-size: 1.6rem; /* ปรับขนาดหัวข้อ */
+        font-weight: bold;
+        color: #333;
+      }
+      .form-group label,
+      .form-group .form-check-label,
+      .form-group p.mb-0 {
+        font-size: 0.9rem; /* ปรับขนาด label และข้อความ */
+        color: #555;
+      }
+      .form-control {
+        font-size: 0.9rem;
+      }
+      #grand_total_price {
+        font-size: 1.15rem; /* ปรับขนาดราคารวมสุทธิ */
+        font-weight: bold;
+        color: #dc3545; /* เปลี่ยนเป็นสีแดง */
+      }
+      #qr_code_payment_section p {
+        font-size: 0.85rem; /* ปรับขนาดข้อความในส่วน QR */
+      }
+      #qr_code_payment_section strong {
+        font-size: 1rem;
+      }
+      .slip-section, .qr-code-section {
+        display: none; /* เริ่มต้นให้ซ่อน */
+      }
+      #qr_code_image {
+        max-width: 220px; /* ปรับขนาด QR Code */
+        height: auto;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        padding: 5px;
+      }
+      .download-qr-btn {
+        margin-top: 10px; /* ปรับ margin ปุ่มดาวน์โหลด */
+        font-size: 0.8rem;
+      }
+      .btn-primary { /* ปรับปุ่มหลัก */
+          font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      <div class="form-container">
+        <h4 class="text-center mb-4">บริการซื้อเครื่องดื่ม</h4>
+        <form id="submit-to-google-sheet">
+          <div class="form-group">
+            <label for="table_number">หมายเลขโต๊ะ/ชื่อผู้สั่ง:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="table_number"
+              id="table_number"
+              placeholder="กรุณากรอกหมายเลขโต๊ะ หรือ ชื่อ"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="product1_qty">เบียร์ช้างกระป๋องเล็ก 320ml (ราคา: <span id="product1_price_display">45</span>):</label>
+            <input class="form-control product-qty" type="number" name="product1_qty" id="product1_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product2_qty">เบียร์สิงห์กระป๋องเล็ก 320ml (ราคา: <span id="product2_price_display">45</span>):</label>
+            <input class="form-control product-qty" type="number" name="product2_qty" id="product2_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product3_qty">เบียร์ลีโอกระป๋องเล็ก 320ml (ราคา: <span id="product3_price_display">45</span>):</label>
+            <input class="form-control product-qty" type="number" name="product3_qty" id="product3_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product4_qty">แสงโสมแบน (ราคา: <span id="product4_price_display">170</span>):</label>
+            <input class="form-control product-qty" type="number" name="product4_qty" id="product4_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product5_qty">รีเจนซี่แบน (ราคา: <span id="product5_price_display">470</span>):</label>
+            <input class="form-control product-qty" type="number" name="product5_qty" id="product5_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product6_qty">สมทบทุนสโมสรนักศึกษา (ราคา: <span id="product6_price_display">10</span>):</label>
+            <input class="form-control product-qty" type="number" name="product6_qty" id="product6_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+
+
+          <div class="form-group">
+            <label for="total_price">ราคารวมสินค้า:</label>
+            <input class="form-control" type="text" name="total_price" id="total_price" value="0" readonly />
+          </div>
+
+          <div class="form-group">
+              <p class="mb-0">ค่าหิ้ว: <span id="shipping_cost_display">100</span> บาท</p>
+          </div>
+
+          <div class="form-group">
+              <label for="grand_total_price">ราคารวมสุทธิ (รวมค่าหิ้ว):</label>
+              <input class="form-control" type="text" name="grand_total_price" id="grand_total_price" value="0" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="payment_method">วิธีการชำระเงิน:</label>
+            <select class="form-control" id="payment_method" name="payment_method" required>
+              <option value="">-- เลือกวิธีการชำระเงิน --</option>
+              <option value="transfer">โอนเงิน (สแกน QR / แนบสลิป)</option>
+              <option value="cash">ชำระเงินสด</option>
+            </select>
+          </div>
+
+          <div class="form-group qr-code-section" id="qr_code_payment_section">
+            <p class="text-center font-weight-bold">สแกน QR Code เพื่อชำระเงิน</p>
+            <div class="text-center">
+                <img id="qr_code_image" src="ANIRUTQR.png" alt="QR Code สำหรับชำระเงิน"/>
+                <p id="qr_amount_note" class="mt-2">ยอดชำระ: <strong id="qr_amount_display">0</strong> บาท<br>(กรุณากรอกยอดนี้ในแอปธนาคารของท่าน)</p>
+                <a id="download_qr_link" href="ANIRUTQR.png" download="ANIRUTQR_Payment.png" class="btn btn-info btn-sm download-qr-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    ดาวน์โหลด QR Code
+                </a>
+            </div>
+            <p class="text-center mt-3">หลังจากชำระเงินแล้ว กรุณาแนบสลิปด้านล่าง</p>
+          </div>
+
+
+          <div class="form-group slip-section" id="slip_upload_section">
+            <label for="slip">สลิปโอนเงิน:</label>
+            <input class="form-control" type="file" name="slip" id="slip" accept="image/*" />
+            <img id="slip_preview" src="#" alt="ตัวอย่างสลิป" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: none;"/>
+          </div>
+
+          <div class="form-group form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="confirm_order_final" name="confirm_order_final" required />
+            <label class="form-check-label" for="confirm_order_final">ยืนยันการสั่งซื้อ</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            ส่งข้อมูล
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec"; // URL Apps Script ของคุณ
+      const form = document.getElementById("submit-to-google-sheet");
+      const slipInput = document.getElementById('slip');
+      const slipPreview = document.getElementById('slip_preview');
+      const slipUploadSection = document.getElementById('slip_upload_section');
+      const paymentMethodSelect = document.getElementById('payment_method');
+      const qrCodePaymentSection = document.getElementById('qr_code_payment_section');
+      const qrAmountDisplay = document.getElementById('qr_amount_display');
+      const qrCodeImage = document.getElementById('qr_code_image');
+      const downloadQrLink = document.getElementById('download_qr_link');
+
+      const qrCodeFileName = "ANIRUTQR.png"; // ชื่อไฟล์ QR Code ของคุณ
+
+      qrCodeImage.src = qrCodeFileName;
+      downloadQrLink.href = qrCodeFileName;
+      downloadQrLink.setAttribute('download', 'ANIRUTQR_Payment.png');
+
+      const shippingCost = 100; // ค่าหิ้ว
+      document.getElementById("shipping_cost_display").textContent = shippingCost;
+
+      const productPrices = {
+          product1: 45,
+          product2: 45,
+          product3: 45,
+          product4: 170,
+          product5: 470,
+          product6: 10
+      };
+
+      document.getElementById("product1_price_display").textContent = productPrices.product1;
+      document.getElementById("product2_price_display").textContent = productPrices.product2;
+      document.getElementById("product3_price_display").textContent = productPrices.product3;
+      document.getElementById("product4_price_display").textContent = productPrices.product4;
+      document.getElementById("product5_price_display").textContent = productPrices.product5;
+      document.getElementById("product6_price_display").textContent = productPrices.product6;
+
+      function calculateTotal() {
+        const product1Qty = parseInt(document.getElementById("product1_qty").value) || 0;
+        const product2Qty = parseInt(document.getElementById("product2_qty").value) || 0;
+        const product3Qty = parseInt(document.getElementById("product3_qty").value) || 0;
+        const product4Qty = parseInt(document.getElementById("product4_qty").value) || 0;
+        const product5Qty = parseInt(document.getElementById("product5_qty").value) || 0;
+        const product6Qty = parseInt(document.getElementById("product6_qty").value) || 0;
+
+        const subTotal = (product1Qty * productPrices.product1) +
+                      (product2Qty * productPrices.product2) +
+                      (product3Qty * productPrices.product3) +
+                      (product4Qty * productPrices.product4) +
+                      (product5Qty * productPrices.product5) +
+                      (product6Qty * productPrices.product6);
+        const grandTotal = subTotal + shippingCost;
+        document.getElementById("total_price").value = subTotal;
+        document.getElementById("grand_total_price").value = grandTotal;
+        qrAmountDisplay.textContent = grandTotal;
+      }
+
+      document.querySelectorAll(".product-qty").forEach(input => {
+          input.addEventListener("input", calculateTotal);
+      });
+      calculateTotal();
+
+      function updatePaymentMethodUI() {
+        const selectedMethod = paymentMethodSelect.value;
+        if (selectedMethod === 'cash') {
+          slipUploadSection.style.display = 'none';
+          qrCodePaymentSection.style.display = 'none';
+          slipInput.removeAttribute('required');
+          slipInput.value = null;
+          slipPreview.src = '#';
+          slipPreview.style.display = 'none';
+        } else if (selectedMethod === 'transfer') {
+          slipUploadSection.style.display = 'block';
+          qrCodePaymentSection.style.display = 'block';
+          slipInput.setAttribute('required', 'required');
+        } else { // กรณี "-- เลือกวิธีการชำระเงิน --"
+          slipUploadSection.style.display = 'none';
+          qrCodePaymentSection.style.display = 'none';
+          slipInput.removeAttribute('required');
+        }
+      }
+
+      paymentMethodSelect.addEventListener('change', updatePaymentMethodUI);
+      updatePaymentMethodUI(); // เรียกครั้งแรกเพื่อให้ UI ถูกต้องตามค่าเริ่มต้น
+
+
+      slipInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            slipPreview.src = e.target.result;
+            slipPreview.style.display = 'block';
+          }
+          reader.readAsDataURL(file);
+        } else {
+          slipPreview.src = '#';
+          slipPreview.style.display = 'none';
+        }
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const selectedPaymentMethod = paymentMethodSelect.value;
+        const file = slipInput.files[0];
+
+        if (selectedPaymentMethod === '') {
+            swal("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", "error");
+            return;
+        }
+
+        if (selectedPaymentMethod === 'transfer' && !file) {
+            swal("เกิดข้อผิดพลาด", "กรุณาแนบสลิปสำหรับวิธีการชำระเงินแบบโอนเงิน", "error");
+            return;
+        }
+        if (selectedPaymentMethod === 'transfer' && file) {
+            const maxSizeMB = 10;
+            if (file.size > maxSizeMB * 1024 * 1024) {
+                swal("เกิดข้อผิดพลาด", `ไฟล์ต้องมีขนาดไม่เกิน ${maxSizeMB} MB`, "error");
+                return;
+            }
+        }
+
+        swal({ title: 'กำลังประมวลผล...', text: 'กรุณารอสักครู่...', showConfirmButton: false, allowOutsideClick: false });
+
+        const proceedWithSubmission = (base64FileData = null, originalFileName = null) => {
+            var formData = new FormData();
+            formData.append('table_number', document.getElementById('table_number').value);
+            formData.append('product1_qty', document.getElementById('product1_qty').value);
+            formData.append('product2_qty', document.getElementById('product2_qty').value);
+            formData.append('product3_qty', document.getElementById('product3_qty').value);
+            formData.append('product4_qty', document.getElementById('product4_qty').value);
+            formData.append('product5_qty', document.getElementById('product5_qty').value);
+            formData.append('product6_qty', document.getElementById('product6_qty').value);
+            formData.append('total_price', document.getElementById('total_price').value);
+            formData.append('shipping_cost', shippingCost.toString());
+            formData.append('grand_total_price', document.getElementById('grand_total_price').value);
+            formData.append('payment_method', selectedPaymentMethod);
+            formData.append('confirm_order_final', document.getElementById('confirm_order_final').checked ? 'on' : '');
+
+            if (base64FileData && originalFileName) {
+                formData.append('fileName', originalFileName);
+                formData.append('fileData', base64FileData);
+            } else {
+                formData.append('fileName', '');
+                formData.append('fileData', '');
+            }
+
+            fetch(scriptURL, { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                if(data.result === 'success'){
+                    swal("สำเร็จ", "ทำรายการสำเร็จแล้ว (Order #: " + data.orderNumber + ")", "success");
+                    form.reset();
+                    slipPreview.style.display = 'none';
+                    // Reset payment method UI to initial state
+                    paymentMethodSelect.value = ""; // กลับไปที่ "-- เลือกวิธีการชำระเงิน --"
+                    updatePaymentMethodUI(); // เรียกเพื่อให้ UI ซ่อนส่วนที่ไม่จำเป็น
+                    calculateTotal();
+                } else {
+                    swal("เกิดข้อผิดพลาด", data.error || "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่อีกครั้ง!", "error");
+                }
+                })
+                .catch(error => {
+                console.error('Error!', error.message);
+                swal("เกิดข้อผิดพลาด", "การเชื่อมต่อมีปัญหา กรุณาลองใหม่อีกครั้ง!", "error");
+                });
+        };
+
+        if (selectedPaymentMethod === 'transfer' && file) {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                proceedWithSubmission(reader.result, file.name);
+            }
+            reader.onerror = function() {
+                console.error("FileReader error!");
+                swal("เกิดข้อผิดพลาด", "ไม่สามารถอ่านไฟล์ที่เลือกได้", "error");
+            };
+            reader.readAsDataURL(file);
+        } else if (selectedPaymentMethod === 'cash') {
+            proceedWithSubmission();
+        }
+      });
+    </script>
+  </body>
+</html>
