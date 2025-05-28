@@ -14,59 +14,85 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
     <style>
       body {
-        font-family: 'Tahoma', sans-serif; /* ตัวอย่างการเปลี่ยน font */
+        font-family: 'Tahoma', sans-serif;
       }
       .form-container {
         max-width: 500px;
         margin: auto;
-        margin-top: 30px; /* ลด margin-top ลงเล็กน้อย */
-        margin-bottom: 30px; /* เพิ่ม margin-bottom */
+        margin-top: 30px;
+        margin-bottom: 30px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         background-color: #fff;
-        border-radius: 8px; /* เพิ่มความโค้งมนเล็กน้อย */
+        border-radius: 8px;
       }
       .form-container h4 {
-        font-size: 1.6rem; /* ปรับขนาดหัวข้อ */
+        font-size: 1.6rem;
         font-weight: bold;
         color: #333;
       }
       .form-group label,
       .form-group .form-check-label,
       .form-group p.mb-0 {
-        font-size: 0.9rem; /* ปรับขนาด label และข้อความ */
+        font-size: 0.9rem;
         color: #555;
       }
       .form-control {
         font-size: 0.9rem;
       }
       #grand_total_price {
-        font-size: 1.15rem; /* ปรับขนาดราคารวมสุทธิ */
+        font-size: 1.15rem;
         font-weight: bold;
-        color: #dc3545; /* เปลี่ยนเป็นสีแดง */
+        color: #dc3545;
       }
-      #qr_code_payment_section p {
-        font-size: 0.85rem; /* ปรับขนาดข้อความในส่วน QR */
+      #qr_code_payment_section p,
+      #qr_code_payment_section .qr-info {
+        font-size: 0.85rem;
       }
       #qr_code_payment_section strong {
         font-size: 1rem;
       }
-      .slip-section, .qr-code-section {
-        display: none; /* เริ่มต้นให้ซ่อน */
+      .qr-info {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #333;
+        line-height: 1.4;
       }
-      #qr_code_image {
-        max-width: 220px; /* ปรับขนาด QR Code */
+      .qr-info strong {
+        font-weight: bold;
+        font-size: 0.95rem;
+      }
+      .slip-section, .qr-code-section {
+        display: none;
+      }
+      #qr_code_image_static {
+        max-width: 200px;
         height: auto;
         margin-top: 5px;
         border: 1px solid #ddd;
         padding: 5px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
       .download-qr-btn {
-        margin-top: 10px; /* ปรับ margin ปุ่มดาวน์โหลด */
+        margin-top: 10px;
         font-size: 0.8rem;
       }
-      .btn-primary { /* ปรับปุ่มหลัก */
+      .btn-primary {
           font-size: 1rem;
+      }
+      .donation-condition, .purchase-reward-condition {
+        font-size: 0.8rem;
+        color: #007bff;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        padding-left: 5px;
+      }
+      .highlight-reward {
+          color: #28a745;
+          font-weight: bold;
+          font-size:0.85rem;
       }
     </style>
   </head>
@@ -91,7 +117,7 @@
             <input class="form-control product-qty" type="number" name="product1_qty" id="product1_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product2_qty">เบียร์สิงห์กระป๋องเล็ก 320ml (ราคา: <span id="product2_price_display">45</span>):</label>
+            <label for="product2_qty">เบียร์สิงห์กระป๋องเล็ก 320ml (ราคา: <span id="product2_price_display">50</span>):</label>
             <input class="form-control product-qty" type="number" name="product2_qty" id="product2_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
@@ -99,30 +125,33 @@
             <input class="form-control product-qty" type="number" name="product3_qty" id="product3_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product4_qty">แสงโสมแบน (ราคา: <span id="product4_price_display">170</span>):</label>
+            <label for="product4_qty">แสงโสมแบน (ราคา: <span id="product4_price_display">220</span>):</label>
             <input class="form-control product-qty" type="number" name="product4_qty" id="product4_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product5_qty">รีเจนซี่แบน (ราคา: <span id="product5_price_display">470</span>):</label>
+            <label for="product5_qty">รีเจนซี่แบน (ราคา: <span id="product5_price_display">500</span>):</label>
             <input class="form-control product-qty" type="number" name="product5_qty" id="product5_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product6_qty">สมทบทุนสโมสรนักศึกษา (ราคา: <span id="product6_price_display">10</span>):</label>
-            <input class="form-control product-qty" type="number" name="product6_qty" id="product6_qty" placeholder="จำนวน" value="0" min="0"/>
+            <label for="product6_donation_amount">สมทบทุนสโมสรนักศึกษา (ระบุจำนวนเงินที่ต้องการบริจาค):</label>
+            <input class="form-control donation-amount-input" type="number" name="product6_donation_amount" id="product6_donation_amount" placeholder="จำนวนเงินบาท" value="0" min="0" step="1"/>
+            <p class="donation-condition">ทุกๆ 300 บาทของการบริจาค รับสมุดปกหนังฟรี 1 เล่ม</p> <p id="donation_status_message" class="highlight-reward" style="display:none;"></p>
           </div>
 
 
           <div class="form-group">
-            <label for="total_price">ราคารวมสินค้า:</label>
+            <label for="total_price">ราคารวมสินค้า (ไม่รวมสมทบทุนและค่าหิ้ว):</label>
             <input class="form-control" type="text" name="total_price" id="total_price" value="0" readonly />
+            <p class="purchase-reward-condition">ทุกๆ 1,000 บาทของยอดรวมสินค้า รับ 1 สิทธิ์ลุ้นรับสมุดฟรี!</p>
+            <p id="purchase_reward_status_message" class="highlight-reward" style="display:none;"></p>
           </div>
 
           <div class="form-group">
-              <p class="mb-0">ค่าหิ้ว: <span id="shipping_cost_display">100</span> บาท</p>
+              <p class="mb-0">ค่าหิ้ว: <span id="shipping_cost_display">0</span> บาท</p>
           </div>
 
           <div class="form-group">
-              <label for="grand_total_price">ราคารวมสุทธิ (รวมค่าหิ้ว):</label>
+              <label for="grand_total_price">ราคารวมสุทธิ (รวมค่าหิ้วและสมทบทุน):</label>
               <input class="form-control" type="text" name="grand_total_price" id="grand_total_price" value="0" readonly />
           </div>
 
@@ -136,11 +165,15 @@
           </div>
 
           <div class="form-group qr-code-section" id="qr_code_payment_section">
-            <p class="text-center font-weight-bold">สแกน QR Code เพื่อชำระเงิน</p>
+            <p class="text-center font-weight-bold">สแกน QR Code ด้านล่างเพื่อชำระเงิน</p>
             <div class="text-center">
-                <img id="qr_code_image" src="ANIRUTQR.png" alt="QR Code สำหรับชำระเงิน"/>
+                <img id="qr_code_image_static" src="POPQR.png" alt="QR Code สำหรับชำระเงิน"/>
+                <div class="qr-info">
+                    <strong>0902421491</strong><br>
+                    น.ส.พรพรรณ นุชจันทร์ (เหรัญญิกสโมสรนักศึกษา)
+                </div>
                 <p id="qr_amount_note" class="mt-2">ยอดชำระ: <strong id="qr_amount_display">0</strong> บาท<br>(กรุณากรอกยอดนี้ในแอปธนาคารของท่าน)</p>
-                <a id="download_qr_link" href="ANIRUTQR.png" download="ANIRUTQR_Payment.png" class="btn btn-info btn-sm download-qr-btn">
+                <a id="download_qr_link" href="POPQR.png" download="POPQR_Payment_Scan.png" class="btn btn-info btn-sm download-qr-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                         <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
@@ -171,7 +204,7 @@
     </div>
 
     <script>
-      const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec"; // URL Apps Script ของคุณ
+      const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec";
       const form = document.getElementById("submit-to-google-sheet");
       const slipInput = document.getElementById('slip');
       const slipPreview = document.getElementById('slip_preview');
@@ -179,25 +212,39 @@
       const paymentMethodSelect = document.getElementById('payment_method');
       const qrCodePaymentSection = document.getElementById('qr_code_payment_section');
       const qrAmountDisplay = document.getElementById('qr_amount_display');
-      const qrCodeImage = document.getElementById('qr_code_image');
+
+      const qrCodeImageStatic = document.getElementById('qr_code_image_static');
       const downloadQrLink = document.getElementById('download_qr_link');
 
-      const qrCodeFileName = "ANIRUTQR.png"; // ชื่อไฟล์ QR Code ของคุณ
+      const donationStatusMessage = document.getElementById('donation_status_message');
+      const purchaseRewardStatusMessage = document.getElementById('purchase_reward_status_message');
 
-      qrCodeImage.src = qrCodeFileName;
-      downloadQrLink.href = qrCodeFileName;
-      downloadQrLink.setAttribute('download', 'ANIRUTQR_Payment.png');
+      const staticQrCodeFileName = "POPQR.png";
 
-      const shippingCost = 100; // ค่าหิ้ว
-      document.getElementById("shipping_cost_display").textContent = shippingCost;
+      qrCodeImageStatic.src = staticQrCodeFileName;
+      downloadQrLink.href = staticQrCodeFileName;
+      downloadQrLink.setAttribute('download', 'POPQR_Payment_Scan.png');
+
+
+      const baseShippingCost = 100;
+      const shippingCostDisplay = document.getElementById("shipping_cost_display");
 
       const productPrices = {
           product1: 45,
-          product2: 45,
+          product2: 50, // ราคาใหม่
           product3: 45,
-          product4: 170,
-          product5: 470,
-          product6: 10
+          product4: 220, // ราคาใหม่
+          product5: 500, // ราคาใหม่
+          // product6 ไม่ได้ใช้ราคาจากที่นี่แล้ว
+      };
+
+      const productLabels = {
+        product1: document.querySelector("label[for='product1_qty']").textContent.split('(ราคา:')[0].trim(),
+        product2: document.querySelector("label[for='product2_qty']").textContent.split('(ราคา:')[0].trim(),
+        product3: document.querySelector("label[for='product3_qty']").textContent.split('(ราคา:')[0].trim(),
+        product4: document.querySelector("label[for='product4_qty']").textContent.split('(ราคา:')[0].trim(),
+        product5: document.querySelector("label[for='product5_qty']").textContent.split('(ราคา:')[0].trim(),
+        product6: "สมทบทุนสโมสรนักศึกษา"
       };
 
       document.getElementById("product1_price_display").textContent = productPrices.product1;
@@ -205,7 +252,8 @@
       document.getElementById("product3_price_display").textContent = productPrices.product3;
       document.getElementById("product4_price_display").textContent = productPrices.product4;
       document.getElementById("product5_price_display").textContent = productPrices.product5;
-      document.getElementById("product6_price_display").textContent = productPrices.product6;
+      // ไม่ต้องอัปเดต product6_price_display เพราะ label เปลี่ยนไปแล้ว
+
 
       function calculateTotal() {
         const product1Qty = parseInt(document.getElementById("product1_qty").value) || 0;
@@ -213,26 +261,54 @@
         const product3Qty = parseInt(document.getElementById("product3_qty").value) || 0;
         const product4Qty = parseInt(document.getElementById("product4_qty").value) || 0;
         const product5Qty = parseInt(document.getElementById("product5_qty").value) || 0;
-        const product6Qty = parseInt(document.getElementById("product6_qty").value) || 0;
+        const donationAmountInput = parseFloat(document.getElementById("product6_donation_amount").value) || 0;
 
-        const subTotal = (product1Qty * productPrices.product1) +
-                      (product2Qty * productPrices.product2) +
-                      (product3Qty * productPrices.product3) +
-                      (product4Qty * productPrices.product4) +
-                      (product5Qty * productPrices.product5) +
-                      (product6Qty * productPrices.product6);
-        const grandTotal = subTotal + shippingCost;
-        document.getElementById("total_price").value = subTotal;
-        document.getElementById("grand_total_price").value = grandTotal;
-        qrAmountDisplay.textContent = grandTotal;
+        const merchandiseTotal = (product1Qty * productPrices.product1) +
+                               (product2Qty * productPrices.product2) +
+                               (product3Qty * productPrices.product3) +
+                               (product4Qty * productPrices.product4) +
+                               (product5Qty * productPrices.product5);
+
+        const currentDonationAmount = donationAmountInput;
+
+        document.getElementById("total_price").value = merchandiseTotal.toFixed(2);
+
+        let currentShippingCost = 0;
+        if (merchandiseTotal > 0) {
+            currentShippingCost = baseShippingCost;
+        }
+        shippingCostDisplay.textContent = currentShippingCost;
+
+        const grandTotal = merchandiseTotal + currentDonationAmount + currentShippingCost;
+        document.getElementById("grand_total_price").value = grandTotal.toFixed(2);
+        qrAmountDisplay.textContent = grandTotal.toFixed(2);
+
+        // --- คำนวณและแสดงจำนวนสมุดที่ได้รับจากการบริจาค (อัปเดตแล้ว) ---
+        const notebooksFromDonation = Math.floor(currentDonationAmount / 300);
+        if (notebooksFromDonation > 0) {
+            donationStatusMessage.textContent = `ยินดีด้วย! ท่านได้รับสมุดปกหนังฟรี ${notebooksFromDonation} เล่ม (จากการบริจาคทุกๆ 300 บาท)`;
+            donationStatusMessage.style.display = 'block';
+        } else {
+            donationStatusMessage.style.display = 'none';
+        }
+        // ---------------------------------------------
+
+        const numberOfRights = Math.floor(merchandiseTotal / 1000);
+        if (numberOfRights > 0) {
+            purchaseRewardStatusMessage.textContent = `ยอดเยี่ยม! ท่านได้รับ ${numberOfRights} สิทธิ์ลุ้นรับสมุดฟรี!`;
+            purchaseRewardStatusMessage.style.display = 'block';
+        } else {
+            purchaseRewardStatusMessage.style.display = 'none';
+        }
       }
 
-      document.querySelectorAll(".product-qty").forEach(input => {
+      document.querySelectorAll(".product-qty, .donation-amount-input").forEach(input => {
           input.addEventListener("input", calculateTotal);
       });
       calculateTotal();
 
       function updatePaymentMethodUI() {
+        // ... (เหมือนเดิม) ...
         const selectedMethod = paymentMethodSelect.value;
         if (selectedMethod === 'cash') {
           slipUploadSection.style.display = 'none';
@@ -244,19 +320,19 @@
         } else if (selectedMethod === 'transfer') {
           slipUploadSection.style.display = 'block';
           qrCodePaymentSection.style.display = 'block';
+          qrCodeImageStatic.style.display = 'block';
           slipInput.setAttribute('required', 'required');
-        } else { // กรณี "-- เลือกวิธีการชำระเงิน --"
+        } else {
           slipUploadSection.style.display = 'none';
           qrCodePaymentSection.style.display = 'none';
           slipInput.removeAttribute('required');
         }
       }
-
       paymentMethodSelect.addEventListener('change', updatePaymentMethodUI);
-      updatePaymentMethodUI(); // เรียกครั้งแรกเพื่อให้ UI ถูกต้องตามค่าเริ่มต้น
-
+      updatePaymentMethodUI();
 
       slipInput.addEventListener('change', function(event) {
+        // ... (เหมือนเดิม) ...
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
           const reader = new FileReader();
@@ -271,16 +347,116 @@
         }
       });
 
+      function generateReceipt(orderData, submittedFormData) {
+          const receiptWindow = window.open('', 'PRINT_RECEIPT', 'height=700,width=850,resizable=yes,scrollbars=yes');
+          receiptWindow.document.write('<html><head><title>ใบเสร็จรับเงิน / Order Confirmation</title>');
+          receiptWindow.document.write('<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">');
+          receiptWindow.document.write('<style>');
+          receiptWindow.document.write(`
+              body { font-family: 'Tahoma', sans-serif; margin: 20px; padding-top: 20px; }
+              .receipt-container { border: 1px solid #ccc; padding: 25px; width: 95%; max-width:750px; margin: auto; background-color: #fff; }
+              h2 { text-align: center; color: #333; margin-bottom: 25px; }
+              table.order-details { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 25px; }
+              table.order-details th, table.order-details td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size:0.9rem; }
+              table.order-details th { background-color: #f8f9fa; }
+              .text-right { text-align: right; }
+              .text-center { text-align: center; }
+              .totals-table { width: 60%; float: right; margin-top: 15px; font-size:0.95rem;}
+              .totals-table td { padding: 6px 8px; }
+              .totals-table tr td:first-child { text-align: right; font-weight: normal; }
+              .totals-table tr td:last-child { text-align: right; }
+              .total-row strong { font-size: 1.05em; color: #dc3545;}
+              .footer-receipt { margin-top: 30px; text-align: center; font-size: 0.85em; color: #777; }
+              .important-note { margin-top: 25px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; text-align: center; font-size: 0.9em; border-radius: 4px; }
+              .reward-message { color: #155724; background-color: #d4edda; border-color: #c3e6cb; padding: .75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: .25rem; text-align:center; font-size:0.9rem; }
+              .info-section p { margin-bottom: 5px; font-size: 0.9rem;}
+              .info-section strong { color: #000; }
+              hr { margin-top: 20px; margin-bottom: 20px; }
+              @media print {
+                  body { margin: 0; padding: 10px; }
+                  .receipt-container { border: none; box-shadow: none; width: 100%; max-width: 100%; }
+                  .btn-print, .important-note, .reward-message { display: none; }
+              }
+          `);
+          receiptWindow.document.write('</style></head><body>');
+          receiptWindow.document.write('<div class="receipt-container">');
+          receiptWindow.document.write('<h2>ใบเสร็จรับเงิน</h2>');
+          receiptWindow.document.write('<div class="info-section">');
+          receiptWindow.document.write('<p>วันที่: ' + new Date().toLocaleString('th-TH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.</p>');
+          receiptWindow.document.write('<p>เลขที่ออเดอร์: <strong>' + orderData.orderNumber + '</strong></p>');
+          receiptWindow.document.write('<p>หมายเลขโต๊ะ/ผู้สั่ง: <strong>' + submittedFormData.get('table_number') + '</strong></p>');
+          receiptWindow.document.write('<p>วิธีการชำระเงิน: <strong>' + (submittedFormData.get('payment_method') === 'transfer' ? 'โอนเงิน' : 'ชำระเงินสด') + '</strong></p>');
+          receiptWindow.document.write('</div><hr>');
+
+          const merchandiseTotalForReceipt = parseFloat(submittedFormData.get('total_price')) || 0;
+          const donationForReceipt = parseFloat(submittedFormData.get('product6_donation_amount')) || 0;
+
+          // --- แสดงเงื่อนไขรางวัลบนใบเสร็จ (อัปเดตแล้ว) ---
+          const notebooksFromDonationReceipt = Math.floor(donationForReceipt / 300);
+          if (notebooksFromDonationReceipt > 0) {
+            receiptWindow.document.write(`<div class="reward-message"><strong>ท่านได้รับสมุดปกหนังฟรี ${notebooksFromDonationReceipt} เล่ม (จากการบริจาค)</strong></div>`);
+          }
+          const rightsForReceipt = Math.floor(merchandiseTotalForReceipt / 1000);
+          if (rightsForReceipt > 0) {
+            receiptWindow.document.write(`<div class="reward-message"><strong>ท่านได้รับ ${rightsForReceipt} สิทธิ์ลุ้นรับสมุดฟรี (จากการซื้อสินค้า)</strong></div>`);
+          }
+          // --- จบส่วนแสดงเงื่อนไขรางวัลบนใบเสร็จ ---
+
+          receiptWindow.document.write('<h5 class="mt-4">รายการสั่งซื้อ:</h5>');
+          // ... (ส่วนตารางรายการสินค้า และ ยอดรวมต่างๆ เหมือนเดิม) ...
+          receiptWindow.document.write('<table class="order-details">');
+          receiptWindow.document.write('<thead><tr><th>รายการสินค้า</th><th class="text-center">จำนวน</th><th class="text-right">ราคาต่อหน่วย</th><th class="text-right">ราคารวม</th></tr></thead><tbody>');
+          for (let i = 1; i <= 5; i++) {
+              const qty = parseInt(submittedFormData.get('product' + i + '_qty')) || 0;
+              if (qty > 0) {
+                  const price = productPrices['product' + i];
+                  const itemName = productLabels['product' + i] || ('สินค้า ' + i) ;
+                  receiptWindow.document.write('<tr>');
+                  receiptWindow.document.write('<td>' + itemName + '</td>');
+                  receiptWindow.document.write('<td class="text-center">' + qty + '</td>');
+                  receiptWindow.document.write('<td class="text-right">' + price.toFixed(2) + '</td>');
+                  receiptWindow.document.write('<td class="text-right">' + (qty * price).toFixed(2) + '</td>');
+                  receiptWindow.document.write('</tr>');
+              }
+          }
+          if (donationForReceipt > 0) {
+            receiptWindow.document.write('<tr>');
+            receiptWindow.document.write('<td>' + productLabels.product6 + '</td>');
+            receiptWindow.document.write('<td class="text-center">-</td>');
+            receiptWindow.document.write('<td class="text-right">-</td>');
+            receiptWindow.document.write('<td class="text-right">' + donationForReceipt.toFixed(2) + '</td>');
+            receiptWindow.document.write('</tr>');
+          }
+          receiptWindow.document.write('</tbody></table>');
+          receiptWindow.document.write('<table class="totals-table">');
+          receiptWindow.document.write('<tr><td>ราคารวมสินค้า (ไม่รวมสมทบทุน):</td><td>' + merchandiseTotalForReceipt.toFixed(2) + '</td></tr>');
+          if (donationForReceipt > 0) {
+            receiptWindow.document.write('<tr><td>ยอดสมทบทุนสโมสร:</td><td>' + donationForReceipt.toFixed(2) + '</td></tr>');
+          }
+          const shipping = parseFloat(shippingCostDisplay.textContent) || 0;
+          receiptWindow.document.write('<tr><td>ค่าหิ้ว:</td><td>' + shipping.toFixed(2) + '</td></tr>');
+          const grandTotalForReceipt = merchandiseTotalForReceipt + donationForReceipt + shipping;
+          receiptWindow.document.write('<tr class="total-row"><td><strong>ยอดรวมสุทธิ:</strong></td><td><strong>' + grandTotalForReceipt.toFixed(2) + '</strong></td></tr>');
+          receiptWindow.document.write('</table><div style="clear:both;"></div>');
+          receiptWindow.document.write('<div class="important-note mt-4">กรุณาบันทึก PDF หรือ แคปภาพเอาไว้เพื่อประโยชน์ของท่าน</div>');
+          receiptWindow.document.write('<div class="footer-receipt text-center mt-4"><p>ขอบคุณที่ใช้บริการค่ะ/ครับ</p><button class="btn btn-success btn-print" onclick="window.print()">พิมพ์ใบเสร็จ</button></div>');
+          receiptWindow.document.write('</div>');
+          receiptWindow.document.write('</body></html>');
+          receiptWindow.document.close();
+          receiptWindow.focus();
+      }
+
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const selectedPaymentMethod = paymentMethodSelect.value;
         const file = slipInput.files[0];
+        const currentFormData = new FormData(form);
 
+        // ... (validation เหมือนเดิม) ...
         if (selectedPaymentMethod === '') {
             swal("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", "error");
             return;
         }
-
         if (selectedPaymentMethod === 'transfer' && !file) {
             swal("เกิดข้อผิดพลาด", "กรุณาแนบสลิปสำหรับวิธีการชำระเงินแบบโอนเงิน", "error");
             return;
@@ -296,39 +472,61 @@
         swal({ title: 'กำลังประมวลผล...', text: 'กรุณารอสักครู่...', showConfirmButton: false, allowOutsideClick: false });
 
         const proceedWithSubmission = (base64FileData = null, originalFileName = null) => {
-            var formData = new FormData();
-            formData.append('table_number', document.getElementById('table_number').value);
-            formData.append('product1_qty', document.getElementById('product1_qty').value);
-            formData.append('product2_qty', document.getElementById('product2_qty').value);
-            formData.append('product3_qty', document.getElementById('product3_qty').value);
-            formData.append('product4_qty', document.getElementById('product4_qty').value);
-            formData.append('product5_qty', document.getElementById('product5_qty').value);
-            formData.append('product6_qty', document.getElementById('product6_qty').value);
-            formData.append('total_price', document.getElementById('total_price').value);
-            formData.append('shipping_cost', shippingCost.toString());
-            formData.append('grand_total_price', document.getElementById('grand_total_price').value);
-            formData.append('payment_method', selectedPaymentMethod);
-            formData.append('confirm_order_final', document.getElementById('confirm_order_final').checked ? 'on' : '');
+            var formDataToSend = new FormData();
+            formDataToSend.append('table_number', currentFormData.get('table_number'));
+            formDataToSend.append('product1_qty', currentFormData.get('product1_qty'));
+            formDataToSend.append('product2_qty', currentFormData.get('product2_qty'));
+            formDataToSend.append('product3_qty', currentFormData.get('product3_qty'));
+            formDataToSend.append('product4_qty', currentFormData.get('product4_qty'));
+            formDataToSend.append('product5_qty', currentFormData.get('product5_qty'));
+            formDataToSend.append('product6_donation_amount', currentFormData.get('product6_donation_amount')); // ส่งยอดบริจาค
+            formDataToSend.append('total_price', document.getElementById('total_price').value);
+            formDataToSend.append('shipping_cost', shippingCostDisplay.textContent);
+            formDataToSend.append('grand_total_price', document.getElementById('grand_total_price').value);
+            formDataToSend.append('payment_method', selectedPaymentMethod);
+            formDataToSend.append('confirm_order_final', currentFormData.get('confirm_order_final') === 'on' ? 'on' : '');
 
             if (base64FileData && originalFileName) {
-                formData.append('fileName', originalFileName);
-                formData.append('fileData', base64FileData);
+                formDataToSend.append('fileName', originalFileName);
+                formDataToSend.append('fileData', base64FileData);
             } else {
-                formData.append('fileName', '');
-                formData.append('fileData', '');
+                formDataToSend.append('fileName', '');
+                formDataToSend.append('fileData', '');
             }
 
-            fetch(scriptURL, { method: "POST", body: formData })
+            fetch(scriptURL, { method: "POST", body: formDataToSend })
                 .then(response => response.json())
                 .then(data => {
                 if(data.result === 'success'){
-                    swal("สำเร็จ", "ทำรายการสำเร็จแล้ว (Order #: " + data.orderNumber + ")", "success");
-                    form.reset();
-                    slipPreview.style.display = 'none';
-                    // Reset payment method UI to initial state
-                    paymentMethodSelect.value = ""; // กลับไปที่ "-- เลือกวิธีการชำระเงิน --"
-                    updatePaymentMethodUI(); // เรียกเพื่อให้ UI ซ่อนส่วนที่ไม่จำเป็น
-                    calculateTotal();
+                    let successMessageText = "ทำรายการสำเร็จแล้ว (Order #: " + data.orderNumber + ")";
+                    const finalDonationAmount = parseFloat(currentFormData.get('product6_donation_amount')) || 0;
+                    const finalMerchandiseTotal = parseFloat(document.getElementById('total_price').value) || 0;
+
+                    // --- แสดงจำนวนสมุดที่ได้รับใน SweetAlert ---
+                    const notebooksFromDonationFinal = Math.floor(finalDonationAmount / 300);
+                    if (notebooksFromDonationFinal > 0) {
+                        successMessageText += `\nคุณได้รับสมุดปกหนังฟรี ${notebooksFromDonationFinal} เล่มจากการบริจาค!`;
+                    }
+                    // ---------------------------------------
+                    const numberOfRightsFinal = Math.floor(finalMerchandiseTotal / 1000);
+                    if (numberOfRightsFinal > 0) {
+                        successMessageText += `\nคุณได้รับ ${numberOfRightsFinal} สิทธิ์ลุ้นรับสมุดฟรี!`;
+                    }
+
+                    swal({
+                        title: "สำเร็จ!",
+                        html: successMessageText.replace(/\n/g, '<br>'),
+                        type: "success",
+                        confirmButtonText: 'ตกลง'
+                    })
+                    .then((resultSwal) => {
+                        generateReceipt(data, currentFormData);
+                        form.reset();
+                        slipPreview.style.display = 'none';
+                        paymentMethodSelect.value = "";
+                        updatePaymentMethodUI();
+                        calculateTotal();
+                    });
                 } else {
                     swal("เกิดข้อผิดพลาด", data.error || "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่อีกครั้ง!", "error");
                 }
