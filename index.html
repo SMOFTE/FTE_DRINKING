@@ -135,7 +135,8 @@
           <div class="form-group">
             <label for="product6_donation_amount">สมทบทุนสโมสรนักศึกษา (ระบุจำนวนเงินที่ต้องการบริจาค):</label>
             <input class="form-control donation-amount-input" type="number" name="product6_donation_amount" id="product6_donation_amount" placeholder="จำนวนเงินบาท" value="0" min="0" step="1"/>
-            <p class="donation-condition">ทุกๆ 300 บาทของการบริจาค รับสมุดปกหนังฟรี 1 เล่ม</p> <p id="donation_status_message" class="highlight-reward" style="display:none;"></p>
+            <p class="donation-condition">ทุกๆ 300 บาทของการบริจาค รับสมุดปกหนังฟรี 1 เล่ม</p>
+            <p id="donation_status_message" class="highlight-reward" style="display:none;"></p>
           </div>
 
 
@@ -204,7 +205,7 @@
     </div>
 
     <script>
-      const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec";
+      const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec"; // URL Apps Script ของคุณ
       const form = document.getElementById("submit-to-google-sheet");
       const slipInput = document.getElementById('slip');
       const slipPreview = document.getElementById('slip_preview');
@@ -231,11 +232,10 @@
 
       const productPrices = {
           product1: 45,
-          product2: 50, // ราคาใหม่
+          product2: 50,
           product3: 45,
-          product4: 220, // ราคาใหม่
-          product5: 500, // ราคาใหม่
-          // product6 ไม่ได้ใช้ราคาจากที่นี่แล้ว
+          product4: 220,
+          product5: 500
       };
 
       const productLabels = {
@@ -252,15 +252,29 @@
       document.getElementById("product3_price_display").textContent = productPrices.product3;
       document.getElementById("product4_price_display").textContent = productPrices.product4;
       document.getElementById("product5_price_display").textContent = productPrices.product5;
-      // ไม่ต้องอัปเดต product6_price_display เพราะ label เปลี่ยนไปแล้ว
 
+
+      function handleInputFocus(event) {
+        if (event.target.value === '0') {
+          event.target.value = '';
+        }
+      }
+
+      function handleInputBlur(event) {
+        if (event.target.value === '') {
+          event.target.value = '0';
+        }
+        // ไม่จำเป็นต้องเรียก calculateTotal() ที่นี่แล้ว เพราะ event 'input' จะจัดการเอง
+        // แต่ถ้าต้องการให้คำนวณทันทีที่ blur แม้ค่าไม่เปลี่ยน ก็คงไว้ได้
+        // calculateTotal(); 
+      }
 
       function calculateTotal() {
-        const product1Qty = parseInt(document.getElementById("product1_qty").value) || 0;
-        const product2Qty = parseInt(document.getElementById("product2_qty").value) || 0;
-        const product3Qty = parseInt(document.getElementById("product3_qty").value) || 0;
-        const product4Qty = parseInt(document.getElementById("product4_qty").value) || 0;
-        const product5Qty = parseInt(document.getElementById("product5_qty").value) || 0;
+        const product1Qty = parseInt(document.getElementById("product1_qty").value, 10) || 0;
+        const product2Qty = parseInt(document.getElementById("product2_qty").value, 10) || 0;
+        const product3Qty = parseInt(document.getElementById("product3_qty").value, 10) || 0;
+        const product4Qty = parseInt(document.getElementById("product4_qty").value, 10) || 0;
+        const product5Qty = parseInt(document.getElementById("product5_qty").value, 10) || 0;
         const donationAmountInput = parseFloat(document.getElementById("product6_donation_amount").value) || 0;
 
         const merchandiseTotal = (product1Qty * productPrices.product1) +
@@ -283,7 +297,6 @@
         document.getElementById("grand_total_price").value = grandTotal.toFixed(2);
         qrAmountDisplay.textContent = grandTotal.toFixed(2);
 
-        // --- คำนวณและแสดงจำนวนสมุดที่ได้รับจากการบริจาค (อัปเดตแล้ว) ---
         const notebooksFromDonation = Math.floor(currentDonationAmount / 300);
         if (notebooksFromDonation > 0) {
             donationStatusMessage.textContent = `ยินดีด้วย! ท่านได้รับสมุดปกหนังฟรี ${notebooksFromDonation} เล่ม (จากการบริจาคทุกๆ 300 บาท)`;
@@ -291,7 +304,6 @@
         } else {
             donationStatusMessage.style.display = 'none';
         }
-        // ---------------------------------------------
 
         const numberOfRights = Math.floor(merchandiseTotal / 1000);
         if (numberOfRights > 0) {
@@ -303,12 +315,13 @@
       }
 
       document.querySelectorAll(".product-qty, .donation-amount-input").forEach(input => {
-          input.addEventListener("input", calculateTotal);
+          input.addEventListener("input", calculateTotal); // คำนวณเมื่อมีการพิมพ์
+          input.addEventListener("focus", handleInputFocus); // จัดการเมื่อคลิกเข้าช่อง
+          input.addEventListener("blur", handleInputBlur);   // จัดการเมื่อคลิกออกจากช่อง
       });
       calculateTotal();
 
       function updatePaymentMethodUI() {
-        // ... (เหมือนเดิม) ...
         const selectedMethod = paymentMethodSelect.value;
         if (selectedMethod === 'cash') {
           slipUploadSection.style.display = 'none';
@@ -332,7 +345,6 @@
       updatePaymentMethodUI();
 
       slipInput.addEventListener('change', function(event) {
-        // ... (เหมือนเดิม) ...
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
           const reader = new FileReader();
@@ -391,7 +403,6 @@
           const merchandiseTotalForReceipt = parseFloat(submittedFormData.get('total_price')) || 0;
           const donationForReceipt = parseFloat(submittedFormData.get('product6_donation_amount')) || 0;
 
-          // --- แสดงเงื่อนไขรางวัลบนใบเสร็จ (อัปเดตแล้ว) ---
           const notebooksFromDonationReceipt = Math.floor(donationForReceipt / 300);
           if (notebooksFromDonationReceipt > 0) {
             receiptWindow.document.write(`<div class="reward-message"><strong>ท่านได้รับสมุดปกหนังฟรี ${notebooksFromDonationReceipt} เล่ม (จากการบริจาค)</strong></div>`);
@@ -400,14 +411,12 @@
           if (rightsForReceipt > 0) {
             receiptWindow.document.write(`<div class="reward-message"><strong>ท่านได้รับ ${rightsForReceipt} สิทธิ์ลุ้นรับสมุดฟรี (จากการซื้อสินค้า)</strong></div>`);
           }
-          // --- จบส่วนแสดงเงื่อนไขรางวัลบนใบเสร็จ ---
 
           receiptWindow.document.write('<h5 class="mt-4">รายการสั่งซื้อ:</h5>');
-          // ... (ส่วนตารางรายการสินค้า และ ยอดรวมต่างๆ เหมือนเดิม) ...
           receiptWindow.document.write('<table class="order-details">');
           receiptWindow.document.write('<thead><tr><th>รายการสินค้า</th><th class="text-center">จำนวน</th><th class="text-right">ราคาต่อหน่วย</th><th class="text-right">ราคารวม</th></tr></thead><tbody>');
           for (let i = 1; i <= 5; i++) {
-              const qty = parseInt(submittedFormData.get('product' + i + '_qty')) || 0;
+              const qty = parseInt(submittedFormData.get('product' + i + '_qty'), 10) || 0;
               if (qty > 0) {
                   const price = productPrices['product' + i];
                   const itemName = productLabels['product' + i] || ('สินค้า ' + i) ;
@@ -428,14 +437,15 @@
             receiptWindow.document.write('</tr>');
           }
           receiptWindow.document.write('</tbody></table>');
+
           receiptWindow.document.write('<table class="totals-table">');
           receiptWindow.document.write('<tr><td>ราคารวมสินค้า (ไม่รวมสมทบทุน):</td><td>' + merchandiseTotalForReceipt.toFixed(2) + '</td></tr>');
           if (donationForReceipt > 0) {
             receiptWindow.document.write('<tr><td>ยอดสมทบทุนสโมสร:</td><td>' + donationForReceipt.toFixed(2) + '</td></tr>');
           }
-          const shipping = parseFloat(shippingCostDisplay.textContent) || 0;
-          receiptWindow.document.write('<tr><td>ค่าหิ้ว:</td><td>' + shipping.toFixed(2) + '</td></tr>');
-          const grandTotalForReceipt = merchandiseTotalForReceipt + donationForReceipt + shipping;
+          const shippingOnReceipt = parseFloat(shippingCostDisplay.textContent) || 0;
+          receiptWindow.document.write('<tr><td>ค่าหิ้ว:</td><td>' + shippingOnReceipt.toFixed(2) + '</td></tr>');
+          const grandTotalForReceipt = merchandiseTotalForReceipt + donationForReceipt + shippingOnReceipt;
           receiptWindow.document.write('<tr class="total-row"><td><strong>ยอดรวมสุทธิ:</strong></td><td><strong>' + grandTotalForReceipt.toFixed(2) + '</strong></td></tr>');
           receiptWindow.document.write('</table><div style="clear:both;"></div>');
           receiptWindow.document.write('<div class="important-note mt-4">กรุณาบันทึก PDF หรือ แคปภาพเอาไว้เพื่อประโยชน์ของท่าน</div>');
@@ -446,13 +456,13 @@
           receiptWindow.focus();
       }
 
+
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const selectedPaymentMethod = paymentMethodSelect.value;
         const file = slipInput.files[0];
         const currentFormData = new FormData(form);
 
-        // ... (validation เหมือนเดิม) ...
         if (selectedPaymentMethod === '') {
             swal("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", "error");
             return;
@@ -474,12 +484,12 @@
         const proceedWithSubmission = (base64FileData = null, originalFileName = null) => {
             var formDataToSend = new FormData();
             formDataToSend.append('table_number', currentFormData.get('table_number'));
-            formDataToSend.append('product1_qty', currentFormData.get('product1_qty'));
-            formDataToSend.append('product2_qty', currentFormData.get('product2_qty'));
-            formDataToSend.append('product3_qty', currentFormData.get('product3_qty'));
-            formDataToSend.append('product4_qty', currentFormData.get('product4_qty'));
-            formDataToSend.append('product5_qty', currentFormData.get('product5_qty'));
-            formDataToSend.append('product6_donation_amount', currentFormData.get('product6_donation_amount')); // ส่งยอดบริจาค
+            formDataToSend.append('product1_qty', document.getElementById('product1_qty').value);
+            formDataToSend.append('product2_qty', document.getElementById('product2_qty').value);
+            formDataToSend.append('product3_qty', document.getElementById('product3_qty').value);
+            formDataToSend.append('product4_qty', document.getElementById('product4_qty').value);
+            formDataToSend.append('product5_qty', document.getElementById('product5_qty').value);
+            formDataToSend.append('product6_donation_amount', document.getElementById('product6_donation_amount').value);
             formDataToSend.append('total_price', document.getElementById('total_price').value);
             formDataToSend.append('shipping_cost', shippingCostDisplay.textContent);
             formDataToSend.append('grand_total_price', document.getElementById('grand_total_price').value);
@@ -499,15 +509,13 @@
                 .then(data => {
                 if(data.result === 'success'){
                     let successMessageText = "ทำรายการสำเร็จแล้ว (Order #: " + data.orderNumber + ")";
-                    const finalDonationAmount = parseFloat(currentFormData.get('product6_donation_amount')) || 0;
+                    const finalDonationAmount = parseFloat(document.getElementById('product6_donation_amount').value) || 0;
                     const finalMerchandiseTotal = parseFloat(document.getElementById('total_price').value) || 0;
 
-                    // --- แสดงจำนวนสมุดที่ได้รับใน SweetAlert ---
                     const notebooksFromDonationFinal = Math.floor(finalDonationAmount / 300);
                     if (notebooksFromDonationFinal > 0) {
                         successMessageText += `\nคุณได้รับสมุดปกหนังฟรี ${notebooksFromDonationFinal} เล่มจากการบริจาค!`;
                     }
-                    // ---------------------------------------
                     const numberOfRightsFinal = Math.floor(finalMerchandiseTotal / 1000);
                     if (numberOfRightsFinal > 0) {
                         successMessageText += `\nคุณได้รับ ${numberOfRightsFinal} สิทธิ์ลุ้นรับสมุดฟรี!`;
@@ -525,7 +533,7 @@
                         slipPreview.style.display = 'none';
                         paymentMethodSelect.value = "";
                         updatePaymentMethodUI();
-                        calculateTotal();
+                        calculateTotal(); // เรียกเพื่อให้ค่าต่างๆ reset รวมถึงข้อความแจ้งเตือน
                     });
                 } else {
                     swal("เกิดข้อผิดพลาด", data.error || "เกิดข้อผิดพลาดบางอย่าง กรุณาลองใหม่อีกครั้ง!", "error");
