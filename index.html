@@ -36,6 +36,11 @@
       .form-group p.mb-0 {
         font-size: 0.9rem;
         color: #555;
+        display: flex;
+        align-items: center;
+      }
+      .form-group .form-check-label{
+        display: inline-block;
       }
       .form-control {
         font-size: 0.9rem;
@@ -85,20 +90,31 @@
       .donation-condition, .purchase-reward-condition {
         font-size: 0.8rem;
         color: #007bff;
-        margin-top: -10px;
+        margin-top: 5px;
         margin-bottom: 10px;
-        padding-left: 5px;
+        padding-left: 0px;
+        display: block;
+        width: 100%;
       }
       .highlight-reward {
           color: #28a745;
           font-weight: bold;
           font-size:0.85rem;
+          display: block;
+          padding-left: 0px;
+          margin-top: 5px;
       }
-
-      /* --- สไตล์สำหรับ Modal ใบเสร็จ --- */
+      .product-image {
+        width: 90px;
+        height: 90px;
+        object-fit: contain;
+        margin-right: 10px;
+        border-radius: 5px;
+      }
+      /* CSS สำหรับ Modal ใบเสร็จ */
       #receiptModalBody {
         font-family: 'Tahoma', sans-serif;
-        font-size: 14px; /* ปรับขนาด font พื้นฐานใน modal */
+        font-size: 14px;
         line-height: 1.5;
       }
       #receiptModalBody .receipt-header {
@@ -148,7 +164,7 @@
       }
       #receiptModalBody .summary-table {
         width: 50%;
-        margin-left: auto; /* จัดชิดขวา */
+        margin-left: auto;
         margin-top: 10px;
         font-size: 0.95em;
       }
@@ -190,7 +206,7 @@
         #receiptModal { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible !important; }
         #receiptModal .modal-dialog { max-width: 100%; margin: 0; }
         #receiptModal .modal-header .close, #receiptModal .modal-footer .btn, .important-note-modal, #receiptModalBody .reward-message-modal  { display: none !important; }
-        #receiptModalBody { font-size: 12px; } /* ปรับขนาด font ตอนพิมพ์ */
+        #receiptModalBody { font-size: 12px; }
         #receiptModalBody .receipt-header h3 { font-size: 1.3em;}
         #receiptModalBody .items-table th, #receiptModalBody .items-table td { padding: 5px; font-size:0.85em; }
         #receiptModalBody .summary-table { font-size: 0.9em; }
@@ -205,47 +221,77 @@
         <form id="submit-to-google-sheet">
           <div class="form-group">
             <label for="table_number">หมายเลขโต๊ะ/ชื่อผู้สั่ง:</label>
-            <input class="form-control" type="text" name="table_number" id="table_number" placeholder="กรุณากรอกหมายเลขโต๊ะ หรือ ชื่อ" required />
+            <input
+              class="form-control"
+              type="text"
+              name="table_number"
+              id="table_number"
+              placeholder="กรุณากรอกหมายเลขโต๊ะ หรือ ชื่อ"
+              required
+            />
           </div>
           <div class="form-group">
-            <label for="product1_qty">เบียร์ช้างกระป๋องเล็ก 320ml (ราคา: <span id="product1_price_display">45</span>):</label>
+            <label for="product1_qty">
+                <img src="Chang.jpg" alt="เบียร์ช้าง" class="product-image"> เบียร์ช้างกระป๋องเล็ก 320ml (ราคา: <span id="product1_price_display">45</span>):
+            </label>
             <input class="form-control product-qty" type="number" name="product1_qty" id="product1_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product2_qty">เบียร์สิงห์กระป๋องเล็ก 320ml (ราคา: <span id="product2_price_display">50</span>):</label>
+            <label for="product2_qty">
+                <img src="sing.jpg" alt="เบียร์สิงห์" class="product-image"> เบียร์สิงห์กระป๋องเล็ก 320ml (ราคา: <span id="product2_price_display">50</span>):
+            </label>
             <input class="form-control product-qty" type="number" name="product2_qty" id="product2_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product3_qty">เบียร์ลีโอกระป๋องเล็ก 320ml (ราคา: <span id="product3_price_display">45</span>):</label>
+            <label for="product3_qty">
+                <img src="Leo.jpg" alt="เบียร์ลีโอ" class="product-image"> เบียร์ลีโอกระป๋องเล็ก 320ml (ราคา: <span id="product3_price_display">45</span>):
+            </label>
             <input class="form-control product-qty" type="number" name="product3_qty" id="product3_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product4_qty">แสงโสมแบน (ราคา: <span id="product4_price_display">220</span>):</label>
+            <label for="product4_qty">
+                <img src="Sangsom.png" alt="แสงโสมแบน" class="product-image"> แสงโสมแบน (ราคา: <span id="product4_price_display">220</span>):
+            </label>
             <input class="form-control product-qty" type="number" name="product4_qty" id="product4_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product5_qty">รีเจนซี่แบน (ราคา: <span id="product5_price_display">500</span>):</label>
+            <label for="product5_qty">
+                <img src="Regensi.jpg" alt="รีเจนซี่แบน" class="product-image"> รีเจนซี่แบน (ราคา: <span id="product5_price_display">489</span>):
+            </label>
             <input class="form-control product-qty" type="number" name="product5_qty" id="product5_qty" placeholder="จำนวน" value="0" min="0"/>
           </div>
           <div class="form-group">
-            <label for="product6_donation_amount">สมทบทุนสโมสรนักศึกษา (ระบุจำนวนเงินที่ต้องการบริจาค):</label>
+            <label for="product7_qty">
+                <img src="soda.webp" alt="โซดา" class="product-image"> โซดา (ราคา: <span id="product7_price_display">20</span>):
+            </label>
+            <input class="form-control product-qty" type="number" name="product7_qty" id="product7_qty" placeholder="จำนวน" value="0" min="0"/>
+          </div>
+          <div class="form-group">
+            <label for="product6_donation_amount">
+                <img src="Smo.png" alt="สมทบทุน" class="product-image"> สมทบทุนสโมสรนักศึกษา (ระบุจำนวนเงินที่ต้องการบริจาค):
+            </label>
             <input class="form-control donation-amount-input" type="number" name="product6_donation_amount" id="product6_donation_amount" placeholder="จำนวนเงินบาท" value="0" min="0" step="1"/>
             <p class="donation-condition">ทุกๆ 300 บาทของการบริจาค รับสมุดปกหนังฟรี 1 เล่ม</p>
             <p id="donation_status_message" class="highlight-reward" style="display:none;"></p>
           </div>
+
+
           <div class="form-group">
             <label for="total_price">ราคารวมสินค้า (ไม่รวมสมทบทุนและค่าหิ้ว):</label>
             <input class="form-control" type="text" name="total_price" id="total_price" value="0" readonly />
             <p class="purchase-reward-condition">ทุกๆ 1,000 บาทของยอดรวมสินค้า รับ 1 สิทธิ์ลุ้นรับสมุดฟรี!</p>
             <p id="purchase_reward_status_message" class="highlight-reward" style="display:none;"></p>
           </div>
+
           <div class="form-group">
               <p class="mb-0">ค่าหิ้ว: <span id="shipping_cost_display">0</span> บาท</p>
           </div>
+
           <div class="form-group">
               <label for="grand_total_price">ราคารวมสุทธิ (รวมค่าหิ้วและสมทบทุน):</label>
               <input class="form-control" type="text" name="grand_total_price" id="grand_total_price" value="0" readonly />
           </div>
+
           <div class="form-group">
             <label for="payment_method">วิธีการชำระเงิน:</label>
             <select class="form-control" id="payment_method" name="payment_method" required>
@@ -254,17 +300,16 @@
               <option value="cash">ชำระเงินสด</option>
             </select>
           </div>
+
           <div class="form-group qr-code-section" id="qr_code_payment_section">
             <p class="text-center font-weight-bold">สแกน QR Code ด้านล่างเพื่อชำระเงิน</p>
             <div class="text-center">
-                <img id="qr_code_image_static" src="POPQR.png" alt="QR Code สำหรับชำระเงิน"/>
-                <div class="qr-info">
-                    <strong>พร้อมเพย์ 0902421491</strong><br>
+                <img id="qr_code_image_static" src="POPQR.png" alt="QR Code สำหรับชำระเงิน"/> <div class="qr-info">
+                    <strong>0902421491</strong><br>
                     น.ส.พรพรรณ นุชจันทร์ (เหรัญญิกสโมสรนักศึกษา)
                 </div>
                 <p id="qr_amount_note" class="mt-2">ยอดชำระ: <strong id="qr_amount_display">0</strong> บาท<br>(กรุณากรอกยอดนี้ในแอปธนาคารของท่าน)</p>
-                <a id="download_qr_link" href="POPQR.png" download="POPQR_Payment_Scan.png" class="btn btn-info btn-sm download-qr-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <a id="download_qr_link" href="POPQR.png" download="POPQR_Payment_Scan.png" class="btn btn-info btn-sm download-qr-btn"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                         <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                     </svg>
@@ -273,16 +318,21 @@
             </div>
             <p class="text-center mt-3">หลังจากชำระเงินแล้ว กรุณาแนบสลิปด้านล่าง</p>
           </div>
+
           <div class="form-group slip-section" id="slip_upload_section">
             <label for="slip">สลิปโอนเงิน:</label>
             <input class="form-control" type="file" name="slip" id="slip" accept="image/*" />
             <img id="slip_preview" src="#" alt="ตัวอย่างสลิป" style="max-width: 200px; max-height: 200px; margin-top: 10px; display: none;"/>
           </div>
+
           <div class="form-group form-check mt-2">
             <input class="form-check-input" type="checkbox" id="confirm_order_final" name="confirm_order_final" required />
             <label class="form-check-label" for="confirm_order_final">ยืนยันการสั่งซื้อ</label>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">ส่งข้อมูล</button>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            ส่งข้อมูล
+          </button>
         </form>
       </div>
     </div>
@@ -309,6 +359,7 @@
       </div>
     </div>
 
+
     <script>
       const scriptURL = "https://script.google.com/macros/s/AKfycbws7cDNxwKmDqx_PURztTFRQCGAqIDij8_528VBby86o1gGoopkxAQzWHMswC9p_UZk0Q/exec";
       const form = document.getElementById("submit-to-google-sheet");
@@ -318,31 +369,40 @@
       const paymentMethodSelect = document.getElementById('payment_method');
       const qrCodePaymentSection = document.getElementById('qr_code_payment_section');
       const qrAmountDisplay = document.getElementById('qr_amount_display');
+
       const qrCodeImageStatic = document.getElementById('qr_code_image_static');
       const downloadQrLink = document.getElementById('download_qr_link');
+
       const donationStatusMessage = document.getElementById('donation_status_message');
       const purchaseRewardStatusMessage = document.getElementById('purchase_reward_status_message');
-      const staticQrCodeFileName = "POPQR.png";
 
-      qrCodeImageStatic.src = staticQrCodeFileName;
-      downloadQrLink.href = staticQrCodeFileName;
+      const staticQrCodeFileName = "POPQR.png"; // ชื่อไฟล์ Static QR Code ของคุณ
+
+      qrCodeImageStatic.src = staticQrCodeFileName; // แก้ไข Path: ไม่มี "images/"
+      downloadQrLink.href = staticQrCodeFileName;   // แก้ไข Path: ไม่มี "images/"
       downloadQrLink.setAttribute('download', 'POPQR_Payment_Scan.png');
+
 
       const baseShippingCost = 100;
       const shippingCostDisplay = document.getElementById("shipping_cost_display");
 
       const productPrices = {
-          product1: 45, product2: 50, product3: 45,
-          product4: 220, product5: 500
+          product1: 45,
+          product2: 50,
+          product3: 45,
+          product4: 220,
+          product5: 489,
+          product7: 20
       };
 
       const productLabels = {
-        product1: document.querySelector("label[for='product1_qty']").textContent.split('(ราคา:')[0].trim(),
-        product2: document.querySelector("label[for='product2_qty']").textContent.split('(ราคา:')[0].trim(),
-        product3: document.querySelector("label[for='product3_qty']").textContent.split('(ราคา:')[0].trim(),
-        product4: document.querySelector("label[for='product4_qty']").textContent.split('(ราคา:')[0].trim(),
-        product5: document.querySelector("label[for='product5_qty']").textContent.split('(ราคา:')[0].trim(),
-        product6: "สมทบทุนสโมสรนักศึกษา"
+        product1: document.querySelector("label[for='product1_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim(),
+        product2: document.querySelector("label[for='product2_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim(),
+        product3: document.querySelector("label[for='product3_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim(),
+        product4: document.querySelector("label[for='product4_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim(),
+        product5: document.querySelector("label[for='product5_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim(),
+        product6: "สมทบทุนสโมสรนักศึกษา",
+        product7: document.querySelector("label[for='product7_qty']").textContent.split('(ราคา:')[0].replace(/"/g, '').trim()
       };
 
       document.getElementById("product1_price_display").textContent = productPrices.product1;
@@ -350,12 +410,19 @@
       document.getElementById("product3_price_display").textContent = productPrices.product3;
       document.getElementById("product4_price_display").textContent = productPrices.product4;
       document.getElementById("product5_price_display").textContent = productPrices.product5;
+      document.getElementById("product7_price_display").textContent = productPrices.product7;
+
 
       function handleInputFocus(event) {
-        if (event.target.value === '0') { event.target.value = ''; }
+        if (event.target.value === '0') {
+          event.target.value = '';
+        }
       }
+
       function handleInputBlur(event) {
-        if (event.target.value === '') { event.target.value = '0'; }
+        if (event.target.value === '') {
+          event.target.value = '0';
+        }
         calculateTotal();
       }
 
@@ -365,18 +432,23 @@
         const product3Qty = parseInt(document.getElementById("product3_qty").value, 10) || 0;
         const product4Qty = parseInt(document.getElementById("product4_qty").value, 10) || 0;
         const product5Qty = parseInt(document.getElementById("product5_qty").value, 10) || 0;
+        const product7Qty = parseInt(document.getElementById("product7_qty").value, 10) || 0;
         const donationAmountInput = parseFloat(document.getElementById("product6_donation_amount").value) || 0;
 
         const merchandiseTotal = (product1Qty * productPrices.product1) +
                                (product2Qty * productPrices.product2) +
                                (product3Qty * productPrices.product3) +
                                (product4Qty * productPrices.product4) +
-                               (product5Qty * productPrices.product5);
+                               (product5Qty * productPrices.product5) +
+                               (product7Qty * productPrices.product7);
+
         const currentDonationAmount = donationAmountInput;
         document.getElementById("total_price").value = merchandiseTotal.toFixed(2);
 
         let currentShippingCost = 0;
-        if (merchandiseTotal > 0) { currentShippingCost = baseShippingCost; }
+        if (merchandiseTotal > 0) {
+            currentShippingCost = baseShippingCost;
+        }
         shippingCostDisplay.textContent = currentShippingCost;
 
         const grandTotal = merchandiseTotal + currentDonationAmount + currentShippingCost;
@@ -450,17 +522,14 @@
 
         htmlContent += '<div class="receipt-header">';
         htmlContent += '<h3>ใบเสร็จรับเงิน</h3>';
-        htmlContent += '<p>สโมสรนักศึกษา</p>'; // <--- คุณอาจจะอยากใส่ชื่อร้านจริง
         htmlContent += '<p>วันที่: ' + new Date().toLocaleString('th-TH', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' น.</p>';
         htmlContent += '</div>';
-
         htmlContent += '<hr>';
         htmlContent += '<div class="order-info row">';
         htmlContent += '<div class="col-6"><p>เลขที่ออเดอร์: <strong>' + orderData.orderNumber + '</strong></p></div>';
         htmlContent += '<div class="col-6 text-right"><p>โต๊ะ/ผู้สั่ง: <strong>' + submittedFormData.get('table_number') + '</strong></p></div>';
         htmlContent += '<div class="col-12"><p>วิธีการชำระเงิน: <strong>' + (submittedFormData.get('payment_method') === 'transfer' ? 'โอนเงิน' : 'ชำระเงินสด') + '</strong></p></div>';
         htmlContent += '</div><hr>';
-
 
         const merchandiseTotalForReceipt = parseFloat(submittedFormData.get('total_price')) || 0;
         const donationForReceipt = parseFloat(submittedFormData.get('product6_donation_amount')) || 0;
@@ -476,7 +545,6 @@
          if (notebooksFromDonationReceipt > 0 || rightsForReceipt > 0) {
             htmlContent += '<hr style="margin-top:0;">';
         }
-
 
         htmlContent += '<h5 class="mt-3 mb-2">รายการสั่งซื้อ:</h5>';
         htmlContent += '<table class="items-table">';
@@ -494,6 +562,17 @@
                 htmlContent += '<td class="item-total">' + (qty * price).toFixed(2) + '</td>';
                 htmlContent += '</tr>';
             }
+        }
+        const product7QtyForReceipt = parseInt(submittedFormData.get('product7_qty'), 10) || 0;
+        if (product7QtyForReceipt > 0) {
+            const price7 = productPrices.product7;
+            const itemName7 = productLabels.product7;
+            htmlContent += '<tr>';
+            htmlContent += '<td class="item-name">' + itemName7 + '</td>';
+            htmlContent += '<td class="item-qty">' + product7QtyForReceipt + '</td>';
+            htmlContent += '<td class="item-price">' + price7.toFixed(2) + '</td>';
+            htmlContent += '<td class="item-total">' + (product7QtyForReceipt * price7).toFixed(2) + '</td>';
+            htmlContent += '</tr>';
         }
         if (donationForReceipt > 0) {
           htmlContent += '<tr>';
@@ -515,7 +594,6 @@
         const grandTotalForReceipt = merchandiseTotalForReceipt + donationForReceipt + shippingOnReceipt;
         htmlContent += '<tr class="grand-total"><td><strong>ยอดรวมสุทธิ:</strong></td><td><strong>' + grandTotalForReceipt.toFixed(2) + ' บาท</strong></td></tr>';
         htmlContent += '</table><div style="clear:both;"></div>';
-
         htmlContent += '<div class="footer-text mt-4"><p>ขอบคุณที่ใช้บริการ</p></div>';
 
         modalBody.innerHTML = htmlContent;
@@ -525,7 +603,6 @@
       function printReceiptModalContent() {
         window.print();
       }
-
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -557,6 +634,7 @@
             formDataToSend.append('product4_qty', document.getElementById('product4_qty').value);
             formDataToSend.append('product5_qty', document.getElementById('product5_qty').value);
             formDataToSend.append('product6_donation_amount', document.getElementById('product6_donation_amount').value);
+            formDataToSend.append('product7_qty', document.getElementById('product7_qty').value); // ส่งจำนวนโซดา
             formDataToSend.append('total_price', document.getElementById('total_price').value);
             formDataToSend.append('shipping_cost', shippingCostDisplay.textContent);
             formDataToSend.append('grand_total_price', document.getElementById('grand_total_price').value);
@@ -595,7 +673,7 @@
                         confirmButtonText: 'ตกลง'
                     })
                     .then((resultSwal) => {
-                        showReceiptModal(data, currentFormData); // เปลี่ยนจาก generateReceipt
+                        showReceiptModal(data, currentFormData);
                         form.reset();
                         slipPreview.style.display = 'none';
                         paymentMethodSelect.value = "";
